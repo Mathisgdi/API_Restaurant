@@ -43,12 +43,12 @@ app.get('/items', (req, res) => {
 app.get('/items/:id', (req, res) => {
     const querie_id= "SELECT * FROM items WHERE idItems = ?";
     const itemsid = req.params.id // Le .params récupère le id de l'URL
-    con.query(querie_id ,[itemsid], function (err, result, fields) {
+    con.query(querie_id ,[itemsid], function (err, result) {
         if (err){
             console.log(err);
         }
         else{
-            res.send(result); // Permet
+            res.send(result); 
         }
 
 })
@@ -57,11 +57,11 @@ app.get('/items/:id', (req, res) => {
 
 // Route to post 
 app.post('/items', (req, res) => {
-    const id = req.body.id // Le .body récupère ce que l'on met dans le body de la requête (via Postman)
+    const id = req.body.idItems // Le .body récupère ce que l'on met dans le body de la requête (via Postman)
     const name = req.body.name;
     const description = req.body.description;
     const price = req.body.price;
-    con.query('INSERT INTO items (idItems, name, description,  price) VALUES (?, ?, ?, ?)', [id, name, description,  price], (err, result) => {
+    con.query('INSERT INTO items VALUES (?, ?, ?, ?)', [id, name, description,  price], (err) => {
         if(err){
             console.log(err);
         }
@@ -78,7 +78,7 @@ app.put("/items/:id",(req,res) => {
     const name = req.body.name;
     const description = req.body.description;
     const price = req.body.price;
-    con.query("UPDATE items SET name= ?, description = ?, price = ? WHERE idItems = ? ", [name, description,  price, id], (err, result) => {
+    con.query("UPDATE items SET name= ?, description = ?, price = ? WHERE idItems = ? ", [name, description,  price, id], (err) => {
         if(err){
             console.log(err);
         }
@@ -91,7 +91,7 @@ app.put("/items/:id",(req,res) => {
 // Route to delete
 app.delete("/items/:id", (req,res) => {
     const id = req.params.id
-    con.query("DELETE from items WHERE IdItems = ?", [id],(err, result) =>{
+    con.query("DELETE from items WHERE IdItems = ?", [id],(err) =>{
         if(err){
             console.log(err);
         }
@@ -102,6 +102,77 @@ app.delete("/items/:id", (req,res) => {
 })
 
 
+// -- FORMULAS ROUTES --
+
+// Route to get all formulas
+app.get('/formulas', (req, res) => {
+    con.query("SELECT * FROM formulas", function (err, result, fields) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            res.send(result);
+        }
+})
+})
+
+// Route to get a formula
+app.get('/formulas/:id', (req, res) => {
+    const querie_id= "SELECT * FROM formulas WHERE id = ?";
+    const itemsid = req.params.id // Le .params récupère le id de l'URL
+    con.query(querie_id ,[itemsid], function (err, result) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            res.send(result); 
+        }
+
+})
+})
+
+// Route to post 
+app.post('/formulas', (req, res) => {
+    const id = req.body.id // Le .body récupère ce que l'on met dans le body de la requête (via Postman)
+    const name = req.body.name;
+    const price = req.body.price;
+    con.query('INSERT INTO formulas VALUES (?, ?, ?)', [id, name, price], (err) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Values Inserted');
+        }
+    });
+})
+
+// Route to put
+app.put("/formulas/:id",(req,res) => {
+    const id = req.params.id
+    const name = req.body.name;
+    const price = req.body.price;
+    con.query("UPDATE formulas SET name= ?, price = ? WHERE id = ? ", [name, price, id], (err) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Values Updated');
+        }  
+})
+})
+
+// Route to delete
+app.delete("/formulas/:id", (req,res) => {
+    const id = req.params.id
+    con.query("DELETE from formulas WHERE id = ?", [id],(err) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Items Delete');
+        }
+    })
+})
 
 
 app.listen(3000,(err)=>{
