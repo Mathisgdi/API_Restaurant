@@ -40,31 +40,30 @@ app.get('/items', (req, res) => {
 
 
 // Route to get an item
-// Question : peut-on le récup comme cela où il faut juste les values ?
 app.get('/items/:id', (req, res) => {
     const querie_id= "SELECT * FROM items WHERE idItems = ?";
-    const itemsid = req.params.id
+    const itemsid = req.params.id // Le .params récupère le id de l'URL
     con.query(querie_id ,[itemsid], function (err, result, fields) {
         if (err){
             console.log(err);
         }
         else{
-            res.send(result);
+            res.send(result); // Permet
         }
+
 })
 })
 
 
 // Route to post 
 app.post('/items', (req, res) => {
-    const id = req.body.id
+    const id = req.body.id // Le .body récupère ce que l'on met dans le body de la requête (via Postman)
     const name = req.body.name;
     const description = req.body.description;
     const price = req.body.price;
     con.query('INSERT INTO items (idItems, name, description,  price) VALUES (?, ?, ?, ?)', [id, name, description,  price], (err, result) => {
         if(err){
             console.log(err);
-            res.sendStatus(500);
         }
         else{
             res.send('Values Inserted');
@@ -73,25 +72,34 @@ app.post('/items', (req, res) => {
 })
 
 
-// Route to post
+// Route to put
 app.put("/items/:id",(req,res) => {
     const id = req.params.id
-    const name = req.params.name;
-    const description = req.params.description;
-    const price = req.params.price;
+    const name = req.body.name;
+    const description = req.body.description;
+    const price = req.body.price;
     con.query("UPDATE items SET name= ?, description = ?, price = ? WHERE idItems = ? ", [name, description,  price, id], (err, result) => {
         if(err){
             console.log(err);
-            res.sendStatus(500);
         }
         else{
             res.send('Values Updated');
         }  
 })
-}
+})
 
-
-)
+// Route to delete
+app.delete("/items/:id", (req,res) => {
+    const id = req.params.id
+    con.query("DELETE from items WHERE IdItems = ?", [id],(err, result) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Items Delete');
+        }
+    })
+})
 
 
 
