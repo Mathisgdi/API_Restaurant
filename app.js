@@ -28,7 +28,7 @@ con.connect((err)=>{
 
 // Route to get all items
 app.get('/items', (req, res) => {
-    con.query("SELECT * FROM items", function (err, result, fields) {
+    con.query("SELECT * FROM items", function (err, result) {
         if (err){
             console.log(err);
         }
@@ -106,7 +106,7 @@ app.delete("/items/:id", (req,res) => {
 
 // Route to get all formulas
 app.get('/formulas', (req, res) => {
-    con.query("SELECT * FROM formulas", function (err, result, fields) {
+    con.query("SELECT * FROM formulas", function (err, result) {
         if (err){
             console.log(err);
         }
@@ -127,8 +127,7 @@ app.get('/formulas/:id', (req, res) => {
         else{
             res.send(result); 
         }
-
-})
+    })
 })
 
 // Route to post 
@@ -173,6 +172,79 @@ app.delete("/formulas/:id", (req,res) => {
         }
     })
 })
+
+
+// -- Categories ROUTES --
+
+// Route to get all categories
+app.get('/categories', (req, res) => {
+    con.query("SELECT * FROM categories", function (err, result) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            res.send(result);
+        }
+})
+})
+
+// Route to get a categories
+app.get('/categories/:id', (req, res) => {
+    const querie_id= "SELECT * FROM categories WHERE id = ?";
+    const itemsid = req.params.id // Le .params récupère le id de l'URL
+    con.query(querie_id ,[itemsid], function (err, result) {
+        if (err){
+            console.log(err);
+        }
+        else{
+            res.send(result); 
+        }
+})
+})
+
+// Route to post 
+app.post('/categories', (req, res) => {
+    const id = req.body.id // Le .body récupère ce que l'on met dans le body de la requête (via Postman)
+    const name = req.body.name;
+    const description = req.body.description;
+    con.query('INSERT INTO categories VALUES (?, ?, ?)', [id, name, description], (err) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Values Inserted');
+        }
+    });
+})
+
+// Route to put
+app.put("/categories/:id",(req,res) => {
+    const id = req.params.id
+    const name = req.body.name;
+    const description = req.body.description;
+    con.query("UPDATE categories SET name= ?, description = ? WHERE id = ? ", [name, description, id], (err) => {
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Values Updated');
+        }  
+})
+})
+
+// Route to delete
+app.delete("/categories/:id", (req,res) => {
+    const id = req.params.id
+    con.query("DELETE from categories WHERE id = ?", [id],(err) =>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            res.send('Items Delete');
+        }
+    })
+})
+
 
 
 app.listen(3000,(err)=>{
