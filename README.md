@@ -15,6 +15,13 @@ npm install
 ```
 
  You will also need to have a MySQL server up and running. Ensure that MySQL is correctly configured for the API.
+ 
+ To launch the project put in the folder path 
+ 
+ ```bash 
+ node app.js 
+ ```
+
 
 ## Usage
 
